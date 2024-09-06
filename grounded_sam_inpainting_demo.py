@@ -202,12 +202,14 @@ if __name__ == "__main__":
     image_pil = Image.fromarray(image)
     
     pipe = StableDiffusionInpaintPipeline.from_pretrained(
-    "runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16,cache_dir=cache_dir
+    "stabilityai/stable-diffusion-2-inpainting", torch_dtype=torch.float32,cache_dir=cache_dir
     )
-    pipe = pipe.to("cuda")
+    #change this if you have cuda
+    #pipe = pipe.to("cuda")
+    pipe = pipe.to("mps")
 
-    image_pil = image_pil.resize((512, 512))
-    mask_pil = mask_pil.resize((512, 512))
+    image_pil = image_pil.resize((1024, 1024))
+    mask_pil = mask_pil.resize((1024, 1024))
     # prompt = "A sofa, high quality, detailed"
     image = pipe(prompt=inpaint_prompt, image=image_pil, mask_image=mask_pil).images[0]
     image = image.resize(size)
